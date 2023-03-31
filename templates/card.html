@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block main %}
+
+    <div class="container">
+        <ul class="list-group">
+            
+            {% for product in products %}
+                <li class="list-group-item">{{ product.product }}  price: {{ product.get_total  }}</li>
+            {% endfor %}
+          </ul>
+          
+          {% if products|length > 0 %}
+            <form method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Place order">
+            </form>
+          {% else %}
+            <p>No products found.</p>
+          {% endif %}
+            
+    </div>
+
+{% endblock main %}

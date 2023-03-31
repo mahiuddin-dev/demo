@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+    
+
+{% block main %}
+  <div class="container mt-5">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+       {% for product in products %}
+        <div class="col">
+          <div class="card shadow-sm">
+            <img src="{{ product.image.url }}" alt="">
+            <div class="card-body">
+              <p class="card-text"> {{ product.name }} | Price: {{ product.price }} </p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{% url 'product:detail' product.id %}" type="button" class="btn btn-sm btn-outline-secondary">View</a> 
+                  
+                  {% if product.orderitem_set.all %}
+                  {% for order_item in product.orderitem_set.all %}
+                    {% if order_item.order %}
+                      <button class="btn btn-sm btn-outline-secondary" disabled>Already added</button>
+                    {% else %}
+                      <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{product.id}}">
+                        <button class="btn btn-sm btn-outline-secondary" type="submit">Add to card</button>
+                      </form>
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{product.id}}">
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Add to card</button>
+                  </form>
+                {% endif %}
+                
+
+                  {% if perms.product.change_product %}
+                    <a href="{% url 'product:update' product.id %}" type="button" class="btn btn-sm btn-outline-secondary">Edit</a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+  </div>
+
+{% endblock main %}

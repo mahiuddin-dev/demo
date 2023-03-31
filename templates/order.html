@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+   <div class="container">
+        {{ order.orderitem_set.all }}
+   </div>
+{% endblock main %}
+    
